@@ -19,15 +19,39 @@ export enum CompletionType {
  * https://github.com/openai/openai-node/blob/master/dist/api.js
  */
 @Injectable()
-export class OpenaiService {
-  private logger = new Logger(OpenaiService.name);
+export class OpenAiService {
+  private logger = new Logger(OpenAiService.name);
   configuration: Configuration;
   openai: OpenAIApi;
 
-  constructor(private http: HttpService, private configService: ConfigService) {
+  constructor(private configService: ConfigService) {
+    this.initialiseOpenAi(configService);
+  }
+
+  /**
+   * Checks for keys and bootstraps OpenAI
+   */
+  private initialiseOpenAi(
+    configService: ConfigService<Record<string, unknown>, false>
+  ) {
+    this.logger.debug('Starting OpenAI Service');
+
+    const apiKey = configService.get('OPENAI_API_KEY');
+    const organization = configService.get('OPENAI_ORG_ID');
+
+    if (!apiKey) {
+      this.logger.error('OPENAI_API_KEY not set!');
+      return;
+    }
+
+    if (!organization) {
+      this.logger.error('OPENAI_ORG_ID not set!');
+      return;
+    }
+
     this.configuration = new Configuration({
-      apiKey: configService.get('OPENAI_API_KEY'),
-      organization: configService.get('OPENAI_ORG_ID'),
+      apiKey,
+      organization,
     });
 
     this.openai = new OpenAIApi(this.configuration);
@@ -38,6 +62,8 @@ export class OpenaiService {
    * Given a prompt and an instruction, the model will return an edited version of the prompt.
    */
   async createEdit(type: CompletionType, config: CreateEditRequest) {
+    this.throwIfNotInitialised();
+
     const edit = await this.openai.createEdit({
       model: this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`),
       ...config,
@@ -54,6 +80,8 @@ export class OpenaiService {
     type: CompletionType,
     config: CreateCompletionRequest
   ) {
+    this.throwIfNotInitialised();
+
     const completion = await this.openai.createCompletion({
       model: this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`),
       max_tokens: this.configService.get(`OPENAI_DEFAULT_MAX_TOKENS_${type}`),
@@ -71,6 +99,8 @@ export class OpenaiService {
     type: CompletionType,
     config: CreateChatCompletionRequest
   ) {
+    this.throwIfNotInitialised();
+
     const chatCompletion = await this.openai.createChatCompletion({
       model: this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`),
       max_tokens: this.configService.get(`OPENAI_DEFAULT_MAX_TOKENS_${type}`),
@@ -78,5 +108,10 @@ export class OpenaiService {
     });
 
     return chatCompletion;
+  }
+
+  private throwIfNotInitialised() {
+    // TODO: Custom Error Type
+    if (!this.openai) throw new Error('OpenAI not initialised');
   }
 }

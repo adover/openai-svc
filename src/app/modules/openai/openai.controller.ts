@@ -4,11 +4,11 @@ import {
   CreateCompletionRequest,
   CreateChatCompletionRequest,
 } from 'openai';
-import { CompletionType, OpenaiService } from './openai.service';
+import { CompletionType, OpenAiService } from './openai.service';
 
 @Controller('openai')
 export class OpenaiController {
-  constructor(private readonly openaiService: OpenaiService) {}
+  constructor(private readonly openaiService: OpenAiService) {}
 
   @Post('edit')
   async createEdit(
