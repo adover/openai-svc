@@ -37,7 +37,7 @@ export class OpenAiService {
     this.logger.debug('Starting OpenAI Service');
 
     const apiKey = configService.get('OPENAI_API_KEY');
-    const organization = configService.get('OPENAI_ORG_ID');
+    const organization = configService.get('OPENAI_ORG_KEY');
 
     if (!apiKey) {
       this.logger.error('OPENAI_API_KEY not set!');
@@ -45,7 +45,7 @@ export class OpenAiService {
     }
 
     if (!organization) {
-      this.logger.error('OPENAI_ORG_ID not set!');
+      this.logger.error('OPENAI_ORG_KEY not set!');
       return;
     }
 
