@@ -62,14 +62,20 @@ export class OpenAiService {
    * Given a prompt and an instruction, the model will return an edited version of the prompt.
    */
   async createEdit(type: CompletionType, config: CreateEditRequest) {
-    this.throwIfNotInitialised();
+    try {
+      this.throwIfNotInitialised();
 
-    const edit = await this.openai.createEdit({
-      model: this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`),
-      ...config,
-    });
+      const edit = await this.openai.createEdit({
+        model: this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`),
+        ...config,
+      });
 
-    return edit;
+      return edit;
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+
+      throw error;
+    }
   }
 
   /**
@@ -80,15 +86,24 @@ export class OpenAiService {
     type: CompletionType,
     config: CreateCompletionRequest
   ) {
-    this.throwIfNotInitialised();
+    this.logger.debug('Enter createCompletion with config', config);
 
-    const completion = await this.openai.createCompletion({
-      model: this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`),
-      max_tokens: this.configService.get(`OPENAI_DEFAULT_MAX_TOKENS_${type}`),
-      ...config,
-    });
+    try {
+      this.throwIfNotInitialised();
 
-    return completion;
+      const completion = await this.openai.createCompletion({
+        model: this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`),
+        max_tokens: this.configService.get(`OPENAI_DEFAULT_MAX_TOKENS_${type}`),
+        ...config,
+      });
+
+      return completion;
+    } catch (error) {
+      console.log(error);
+      this.logger.error(error.message, error.stack);
+
+      throw error;
+    }
   }
 
   /**
@@ -99,15 +114,21 @@ export class OpenAiService {
     type: CompletionType,
     config: CreateChatCompletionRequest
   ) {
-    this.throwIfNotInitialised();
+    try {
+      this.throwIfNotInitialised();
 
-    const chatCompletion = await this.openai.createChatCompletion({
-      model: this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`),
-      max_tokens: this.configService.get(`OPENAI_DEFAULT_MAX_TOKENS_${type}`),
-      ...config,
-    });
+      const chatCompletion = await this.openai.createChatCompletion({
+        model: this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`),
+        max_tokens: this.configService.get(`OPENAI_DEFAULT_MAX_TOKENS_${type}`),
+        ...config,
+      });
 
-    return chatCompletion;
+      return chatCompletion;
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+
+      throw error;
+    }
   }
 
   private throwIfNotInitialised() {
