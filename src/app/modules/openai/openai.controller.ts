@@ -13,7 +13,7 @@ import {
   CreateChatCompletionRequest,
 } from 'openai';
 import { CompletionType, OpenAiService } from './openai.service';
-import { handleRequestError } from 'src/app/error/handleRequestError';
+import { handleRequestError } from 'src/app/errors/handleRequestError';
 
 @Controller('gpt')
 export class OpenAiController {

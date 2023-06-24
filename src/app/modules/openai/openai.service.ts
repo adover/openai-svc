@@ -1,4 +1,3 @@
-import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -67,6 +66,7 @@ export class OpenAiService {
 
       const edit = await this.openai.createEdit({
         model: this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`),
+        temperature: this.configService.get('OPENAI_TEMPERATURE'),
         ...config,
       });
 
@@ -93,6 +93,7 @@ export class OpenAiService {
 
       const completion = await this.openai.createCompletion({
         model: this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`),
+        temperature: this.configService.get('OPENAI_TEMPERATURE'),
         max_tokens: this.configService.get(`OPENAI_DEFAULT_MAX_TOKENS_${type}`),
         ...config,
       });
@@ -119,6 +120,7 @@ export class OpenAiService {
 
       const chatCompletion = await this.openai.createChatCompletion({
         model: this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`),
+        temperature: this.configService.get('OPENAI_TEMPERATURE'),
         max_tokens: this.configService.get(`OPENAI_DEFAULT_MAX_TOKENS_${type}`),
         ...config,
       });
