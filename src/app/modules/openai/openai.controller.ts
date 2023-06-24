@@ -1,13 +1,23 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Logger,
+  Param,
+  Post,
+} from '@nestjs/common';
 import {
   CreateEditRequest,
   CreateCompletionRequest,
   CreateChatCompletionRequest,
 } from 'openai';
 import { CompletionType, OpenAiService } from './openai.service';
+import { handleRequestError } from 'src/app/error/handleRequestError';
 
-@Controller('openai')
-export class OpenaiController {
+@Controller('gpt')
+export class OpenAiController {
+  private logger = new Logger(OpenAiController.name);
   constructor(private readonly openaiService: OpenAiService) {}
 
   @Post('edit')
@@ -15,8 +25,12 @@ export class OpenaiController {
     @Body() config: CreateEditRequest,
     @Param() type: CompletionType
   ) {
-    const edit = await this.openaiService.createEdit(type, config);
-    return edit;
+    try {
+      const edit = await this.openaiService.createEdit(type, config);
+      return edit;
+    } catch (error) {
+      handleRequestError(this.logger, error, 'createEdit');
+    }
   }
 
   @Post('completion/:type')
@@ -24,8 +38,15 @@ export class OpenaiController {
     @Body() config: CreateCompletionRequest,
     @Param() type: CompletionType
   ) {
-    const completion = await this.openaiService.createCompletion(type, config);
-    return completion;
+    try {
+      const completion = await this.openaiService.createCompletion(
+        type,
+        config
+      );
+      return completion;
+    } catch (error) {
+      handleRequestError(this.logger, error, 'createCompletion');
+    }
   }
 
   @Post('chat')
@@ -33,10 +54,14 @@ export class OpenaiController {
     @Body() config: CreateChatCompletionRequest,
     @Param() type: CompletionType
   ) {
-    const chatCompletion = await this.openaiService.createChatCompletion(
-      type,
-      config
-    );
-    return chatCompletion;
+    try {
+      const chatCompletion = await this.openaiService.createChatCompletion(
+        type,
+        config
+      );
+      return chatCompletion;
+    } catch (error) {
+      handleRequestError(this.logger, error, 'createChatCompletion');
+    }
   }
 }
