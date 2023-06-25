@@ -20,7 +20,7 @@ export class OpenAiController {
   private logger = new Logger(OpenAiController.name);
   constructor(private readonly openaiService: OpenAiService) {}
 
-  @Post('edit')
+  @Post('edit/:type')
   async createEdit(
     @Body() config: CreateEditRequest,
     @Param() type: CompletionType
@@ -49,7 +49,7 @@ export class OpenAiController {
     }
   }
 
-  @Post('chat')
+  @Post('chat/:type')
   async createChatCompletion(
     @Body() config: CreateChatCompletionRequest,
     @Param() type: CompletionType
