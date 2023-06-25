@@ -11,6 +11,7 @@ export enum CodeReviewParameter {
   Errors = 'code errors',
   Readability = 'readability',
   BestPractice = 'best practices',
+  Security = 'security',
 }
 
 export const codeReviewUserRequest = (

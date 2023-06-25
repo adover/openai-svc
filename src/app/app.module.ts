@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { OpenaiModule } from './modules/openai/openai.module';
 
 import config from '../config/config';
 import { LoggerModule } from 'nestjs-pino';
+import { ReviewModule } from './modules/review/review.module';
 
 /**
  * Pino Notes
@@ -32,8 +31,7 @@ import { LoggerModule } from 'nestjs-pino';
       },
     }),
     OpenaiModule,
+    ReviewModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
