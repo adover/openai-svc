@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  HttpException,
-  HttpStatus,
-  Logger,
-  Param,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Logger, Param, Post } from '@nestjs/common';
 import {
   CreateEditRequest,
   CreateCompletionRequest,
@@ -14,6 +6,8 @@ import {
 } from 'openai';
 import { CompletionType, OpenAiService } from './openai.service';
 import { handleRequestError } from 'src/app/errors/handleRequestError';
+import { CreateCompletionDto } from './dtos/create-completion.dto';
+import { CreateChatDto } from './dtos/create-chat.dto';
 
 @Controller('gpt')
 export class OpenAiController {
@@ -23,7 +17,7 @@ export class OpenAiController {
   @Post('edit/:type')
   async createEdit(
     @Body() config: CreateEditRequest,
-    @Param() type: CompletionType
+    @Param('type') type: CompletionType
   ) {
     try {
       const edit = await this.openaiService.createEdit(type, config);
@@ -35,8 +29,8 @@ export class OpenAiController {
 
   @Post('completion/:type')
   async createCompletion(
-    @Body() config: CreateCompletionRequest,
-    @Param() type: CompletionType
+    @Body() config: CreateCompletionDto,
+    @Param('type') type: CompletionType
   ) {
     try {
       const completion = await this.openaiService.createCompletion(
@@ -51,15 +45,13 @@ export class OpenAiController {
 
   @Post('chat/:type')
   async createChatCompletion(
-    @Body() config: CreateChatCompletionRequest,
-    @Param() type: CompletionType
+    @Body() config: CreateChatDto,
+    @Param('type') type: CompletionType
   ) {
     try {
-      const chatCompletion = await this.openaiService.createChatCompletion(
-        type,
-        config
-      );
-      return chatCompletion;
+      const res = await this.openaiService.createChatCompletion(type, config);
+
+      return res;
     } catch (error) {
       handleRequestError(this.logger, error, 'createChatCompletion');
     }

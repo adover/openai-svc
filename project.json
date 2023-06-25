@@ -6,9 +6,7 @@
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
         "target": "node",
@@ -16,10 +14,21 @@
         "outputPath": "dist/ai-nest",
         "main": "src/main.ts",
         "tsConfig": "tsconfig.app.json",
-        "assets": [
-          "src/assets"
-        ],
+        "assets": ["src/assets"],
         "isolatedConfig": true,
+        "tsPlugins": [
+          {
+            "name": "@nestjs/swagger/plugin",
+            "options": {
+              "dtoFileNameSuffix": [".entity.ts", ".dto.ts"],
+              "controllerFileNameSuffix": [".controller.ts"],
+              "classValidatorShim": true,
+              "dtoKeyOfComment": "description",
+              "controllerKeyOfComment": "description",
+              "introspectComments": true
+            }
+          }
+        ],
         "webpackConfig": "webpack.config.js"
       },
       "configurations": {
@@ -44,20 +53,14 @@
     },
     "lint": {
       "executor": "@nx/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
+      "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": [
-          "./src/**/*.ts"
-        ]
+        "lintFilePatterns": ["./src/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectName}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectName}"],
       "options": {
         "jestConfig": "jest.config.ts",
         "passWithNoTests": true

@@ -1,12 +1,12 @@
 import { ArrayNotEmpty, IsDefined } from 'class-validator';
-import { ChatCompletionRequestMessage } from 'openai';
+import { CreateCompletionRequestPrompt } from 'openai';
 
 export class CreateCompletionDto {
   @IsDefined()
   model: string;
 
   @ArrayNotEmpty()
-  messages: ChatCompletionRequestMessage[];
+  prompt: CreateCompletionRequestPrompt[];
 
   temperature?: number | null = 0;
 }

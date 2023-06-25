@@ -9,8 +9,8 @@ import {
 } from 'openai';
 
 export enum CompletionType {
-  Text = 'TEXT',
-  Code = 'CODE',
+  text = 'TEXT',
+  code = 'CODE',
 }
 
 /**
@@ -35,8 +35,7 @@ export class OpenAiService {
   ) {
     this.logger.debug('Starting OpenAI Service');
 
-    const apiKey = configService.get('OPENAI_API_KEY');
-    const organization = configService.get('OPENAI_ORG_KEY');
+    const { apiKey, orgKey: organization } = configService.get('openai');
 
     if (!apiKey) {
       this.logger.error('OPENAI_API_KEY not set!');
@@ -118,14 +117,29 @@ export class OpenAiService {
     try {
       this.throwIfNotInitialised();
 
-      const chatCompletion = await this.openai.createChatCompletion({
-        model: this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`),
-        temperature: this.configService.get('OPENAI_TEMPERATURE'),
-        max_tokens: this.configService.get(`OPENAI_DEFAULT_MAX_TOKENS_${type}`),
-        ...config,
-      });
+      if (CompletionType[type] !== CompletionType.text) {
+        // TODO: Turn into a bad request error
+        throw new Error(
+          'Only text completion available on this OpenAI endpoint'
+        );
+      }
 
-      return chatCompletion;
+      const req = {
+        model: this.configService.get(
+          `OPENAI_DEFAULT_MODEL_${CompletionType[type]}`
+        ),
+        temperature: this.configService.get('OPENAI_TEMPERATURE'),
+        max_tokens: Number(
+          this.configService.get(
+            `OPENAI_DEFAULT_MAX_TOKENS_${CompletionType[type]}`
+          )
+        ),
+        ...config,
+      };
+
+      const res = await this.openai.createChatCompletion(req);
+
+      return res.data.choices[0].message.content;
     } catch (error) {
       this.logger.error(error.message, error.stack);
 
