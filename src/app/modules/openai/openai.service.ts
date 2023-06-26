@@ -112,29 +112,39 @@ export class OpenAiService {
    */
   async createChatCompletion(
     type: CompletionType,
-    config: CreateChatCompletionRequest
+    config: Pick<CreateChatCompletionRequest, 'messages'>
   ) {
     try {
       this.throwIfNotInitialised();
 
-      if (CompletionType[type] !== CompletionType.text) {
+      if (type !== CompletionType.text) {
         // TODO: Turn into a bad request error
         throw new Error(
           'Only text completion available on this OpenAI endpoint'
         );
       }
 
+      const model = this.configService.get(`OPENAI_DEFAULT_MODEL_${type}`);
+
+      const temperature = Number(this.configService.get('OPENAI_TEMPERATURE'));
+
+      const max_tokens = Number(
+        this.configService.get(
+          `OPENAI_DEFAULT_MAX_TOKENS_${CompletionType[type]}`
+        )
+      );
+
+      this.logger.debug('Config', { model, temperature, max_tokens });
+
       const req = {
-        model: this.configService.get(
-          `OPENAI_DEFAULT_MODEL_${CompletionType[type]}`
-        ),
-        temperature: this.configService.get('OPENAI_TEMPERATURE'),
-        max_tokens: Number(
-          this.configService.get(
-            `OPENAI_DEFAULT_MAX_TOKENS_${CompletionType[type]}`
-          )
-        ),
+        model,
+        temperature: temperature,
+        max_tokens: max_tokens,
         ...config,
+        // TESTING
+        // messages: [
+        //   { role: 'system', content: 'You are a helpful assistant.' },
+        // ] as any,
       };
 
       const res = await this.openai.createChatCompletion(req);

@@ -3,16 +3,7 @@ import {
   ChatCompletionRequestMessageRoleEnum,
   ChatCompletionResponseMessageRoleEnum,
 } from 'openai';
-
-export enum CodeReviewParameter {
-  Spelling = 'spelling',
-  Logging = 'displaying relevant logging',
-  Efficiency = 'efficiency of code including time and space complexity',
-  Errors = 'code errors',
-  Readability = 'readability',
-  BestPractice = 'best practices',
-  Security = 'security',
-}
+import { ReviewParameter } from '../../review/entities/review-parameter.entity';
 
 export const codeReviewUserRequest = (
   lang: string,
@@ -29,9 +20,9 @@ export const codeReviewUserRequest = (
  * A list of custom prompts
  * role: The role of the messages author. One of system, user, assistant, or function.
  */
-export const codeReview = (
+export const codeReviewSystemRequest = (
   lang: string,
-  parameters: CodeReviewParameter[]
+  parameters: ReviewParameter[]
 ): ChatCompletionRequestMessage => ({
   role: ChatCompletionRequestMessageRoleEnum.System,
   content: `You are an expert in developing applications using ${lang} code. You 
