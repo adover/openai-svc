@@ -1,7 +1,7 @@
 {
-  "name": "ai-nest",
-  "$schema": "node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "src",
+  "name": "back",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/back/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -11,10 +11,10 @@
       "options": {
         "target": "node",
         "compiler": "tsc",
-        "outputPath": "dist/ai-nest",
-        "main": "src/main.ts",
-        "tsConfig": "tsconfig.app.json",
-        "assets": ["src/assets"],
+        "outputPath": "dist/back",
+        "main": "apps/back/src/main.ts",
+        "tsConfig": "apps/back/tsconfig.app.json",
+        "assets": ["apps/back/src/assets"],
         "isolatedConfig": true,
         "tsPlugins": [
           {
@@ -29,7 +29,7 @@
             }
           }
         ],
-        "webpackConfig": "webpack.config.js"
+        "webpackConfig": "apps/back/webpack.config.js"
       },
       "configurations": {
         "development": {},
@@ -40,14 +40,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "ai-nest:build"
+        "buildTarget": "back:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "ai-nest:build:development"
+          "buildTarget": "back:build:development"
         },
         "production": {
-          "buildTarget": "ai-nest:build:production"
+          "buildTarget": "back:build:production"
         }
       }
     },
@@ -55,14 +55,14 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["./src/**/*.ts"]
+        "lintFilePatterns": ["./apps/back/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectName}"],
       "options": {
-        "jestConfig": "jest.config.ts",
+        "jestConfig": "apps/back/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {

@@ -4,9 +4,10 @@ import {
   ChatCompletionResponseMessageRoleEnum,
 } from 'openai';
 import { ReviewParameter } from '../../review/entities/review-parameter.entity';
+import { Language } from '../../review/dto/new-review.dto';
 
 export const codeReviewUserRequest = (
-  lang: string,
+  lang: Language,
   code: string
 ): ChatCompletionRequestMessage => ({
   role: ChatCompletionResponseMessageRoleEnum.User,
@@ -21,7 +22,7 @@ export const codeReviewUserRequest = (
  * role: The role of the messages author. One of system, user, assistant, or function.
  */
 export const codeReviewSystemRequest = (
-  lang: string,
+  lang: Language,
   parameters: ReviewParameter[]
 ): ChatCompletionRequestMessage => ({
   role: ChatCompletionRequestMessageRoleEnum.System,

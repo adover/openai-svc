@@ -1,10 +1,10 @@
 import { Body, Controller, Logger, Param, Post } from '@nestjs/common';
 import { CreateEditRequest } from 'openai';
 import { CompletionType, OpenAiService } from './openai.service';
-import { handleRequestError } from 'src/app/errors/handleRequestError';
 import { CreateCompletionDto } from './dto/create-completion.dto';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { handleRequestError } from '../../errors/handleRequestError';
 
 @Controller('gpt')
 @ApiTags('OpenAI Direct Methods')

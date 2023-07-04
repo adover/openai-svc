@@ -1,4 +1,9 @@
-import { ArrayNotEmpty, IsString, MinLength } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+} from 'class-validator';
 import { ReviewParameter } from '../entities/review-parameter.entity';
 
 export type Language =
@@ -12,6 +17,7 @@ export type Language =
   | 'python';
 
 export class NewReviewDto {
+  @IsNotEmpty()
   language: Language;
 
   @ArrayNotEmpty()

@@ -1,0 +1,49 @@
+@hostname = localhost
+@port = 3000
+@host = {{hostname}}:{{port}}
+
+@type = code
+
+###
+# Create Code Review
+POST http://{{host}}/api/review HTTP/1.1
+Content-Type: application/json
+
+{
+    "language": "HTML",
+    "parameters": [],
+    "code": 
+}
+
+###
+# GPT Create Edit
+POST http://{{host}}/api/gpt/edit/{{type}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "type": "example"
+}
+
+###
+# GPT Create Completion
+POST http://{{host}}/api/gpt/completion/{{type}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "type": "example",
+    "model": "string",
+    "prompt": [],
+    "temperature": 0
+}
+
+###
+# GPT Create Chat Completion:
+POST http://{{host}}/api/gpt/chat/{{type}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "type": "example",
+    "model": "string",
+    "messages": [],
+    "temperature": 0
+}
