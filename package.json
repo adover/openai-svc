@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "start": "nx run-many -t serve -p ui back",
     "start:back": "nx serve back",
     "start:ui": "nx serve ui",
     "build": "nx build",
@@ -28,6 +29,7 @@
     "pino-pretty": "^10.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.45.1",
     "react-quill": "^2.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
